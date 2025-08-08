@@ -4,9 +4,9 @@ A full-stack application built with Laravel 12 backend and Quasar 2 frontend.
 
 ## Architecture
 
-- **Backend**: Laravel 12 (PHP 8.3)
-- **Frontend**: Quasar 2 (Vue 3 + TypeScript)
-- **Web Server**: Nginx
+- **Backend**: Laravel 12.21.0 (PHP 8.2)
+- **Frontend**: Quasar 2.16.0 (Vue 3.4.18 + TypeScript)
+- **Web Server**: Nginx (Alpine)
 - **Database**: MySQL 8.4
 - **Containerization**: Docker & Docker Compose
 
@@ -37,7 +37,7 @@ A full-stack application built with Laravel 12 backend and Quasar 2 frontend.
 
 4. **Access the applications**
     - Backend API: http://localhost:8000
-    - Frontend: http://localhost:8080
+    - Frontend: http://localhost:3000
     - MySQL: localhost:3306
 
 ## Services
@@ -49,8 +49,8 @@ A full-stack application built with Laravel 12 backend and Quasar 2 frontend.
 - **Framework**: Laravel 12
 
 ### Frontend (Quasar)
-- **Port**: 8080
-- **Framework**: Vue 3 + TypeScript
+- **Port**: 3000
+- **Framework**: Vue 3.4.18 + TypeScript
 - **UI Framework**: Quasar 2
 
 ### Database (MySQL)
@@ -140,7 +140,7 @@ The Quasar application is mounted as a volume with hot reload enabled.
 ### Common Issues
 
 1. **Port conflicts**
-    - Ensure ports 8000, 8080, and 3306 are available
+    - Ensure ports 3000, 8000, 8080, and 3306 are available
     - Change ports in `docker-compose.yaml` if needed
 
 2. **Permission issues**
