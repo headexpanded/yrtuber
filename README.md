@@ -48,10 +48,32 @@ A full-stack application built with Laravel 12 backend and Quasar 2 frontend.
 - **PHP Version**: 8.3
 - **Framework**: Laravel 12
 
+#### Run Laravel commands
+```bash
+docker-compose exec backend php artisan migrate
+docker-compose exec backend php artisan db:seed
+docker-compose exec backend php artisan tinker
+```
+
+#### Install new packages
+```bash
+docker-compose exec backend composer require package-name
+```
+
 ### Frontend (Quasar)
 - **Port**: 3000
 - **Framework**: Vue 3.4.18 + TypeScript
 - **UI Framework**: Quasar 2
+
+**Install new packages**
+```bash
+docker-compose exec frontend npm install package-name
+```
+
+**Access frontend container**
+```bash
+docker-compose exec frontend sh
+```
 
 ### Database (MySQL)
 - **Port**: 3306
@@ -86,32 +108,39 @@ FRONTEND_URL=http://localhost:8080
 
 ## Docker Commands
 
-### Start services
+**Start services**
 ```bash
 docker compose up
 ```
 
-### Start services in background
+**Start services in background**
 ```bash
 docker compose up -d
 ```
 
-### Stop services
+**Stop services**
 ```bash
 docker compose down
 ```
 
-### Rebuild containers
+**Rebuild containers**
 ```bash
 docker compose up -d --build
 ```
 
-### View logs
+**View logs**
 ```bash
 docker compose logs -f
+
+# View specific service logs
+docker-compose logs nginx
+docker-compose logs backend
+docker-compose logs frontend
+docker-compose logs db
+
 ```
 
-### Access container shell
+**Access container shell**
 ```bash
 # Backend
 docker compose exec php-fpm bash
