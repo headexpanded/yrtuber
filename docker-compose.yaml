@@ -2,10 +2,9 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "${NGINX_HTTP_PORT:-8000}:80"
-      - "${NGINX_HTTPS_PORT:-8443}:443"
+      - "8000:80"
     volumes:
-      - ./backend:/var/www/html
+      - ./backend/public:/var/www/html/public:ro
       - ./docker/nginx:/etc/nginx/conf.d
     depends_on:
       backend:
@@ -22,14 +21,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "${FRONTEND_PORT:-3000}:${FRONTEND_INTERNAL_PORT:-9000}"
+      - "3000:9000"  # Fixed: Map host 3000 to container 9000
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
       - HOST=${FRONTEND_HOST:-0.0.0.0}
       - PORT=${FRONTEND_INTERNAL_PORT:-9000}
-    command: ["quasar", "dev"]
+    command: ["quasar", "dev", "--host", "0.0.0.0", "--port", "9000"]
     depends_on:
       - backend
     networks:
@@ -40,27 +39,29 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "9000"
     volumes:
       - ./backend:/var/www/html
-    environment:
-      - DB_HOST=${DB_HOST:-db}
-      - DB_PORT=${DB_PORT:-3306}
-      - DB_DATABASE=${DB_DATABASE:-yrtuber}
-      - DB_USERNAME=${DB_USERNAME:-laravel}
-      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - backend_storage:/var/www/html/storage
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${MYSQL_DATABASE:-yrtuber}
+      - DB_USERNAME=${MYSQL_USER:-yrtuber}
+      - DB_PASSWORD=${MYSQL_PASSWORD:-password}
+    networks:
+      - yrtuber-net
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "php-fpm -t || exit 1"]
+      test: ["CMD-SHELL", "php artisan inspire"]
       interval: 15s
       timeout: 10s
       retries: 3
-    restart: unless-stopped
-    networks:
-      - yrtuber-net
 
   # MySQL Database
   db:
@@ -71,8 +72,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - MYSQL_DATABASE=${MYSQL_DATABASE:-yrtuber}
-      - MYSQL_USER=${MYSQL_USER:-laravel}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-secret}
+      - MYSQL_USER=${MYSQL_USER:-yrtuber}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-password}
     ports:
       - "${MYSQL_PORT:-3306}:3306"
     healthcheck:
@@ -89,12 +90,13 @@ services:
     image: adminer
     restart: always
     ports:
-      - "${ADMINER_PORT:-8080}:8080"
+      - "8080:8080"  # Fixed: Use port 8080 (was 8090)
     networks:
       - yrtuber-net
 
 volumes:
   db_data:
+  backend_storage:
 
 networks:
   yrtuber-net:
