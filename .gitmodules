@@ -1,6 +1,7 @@
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:headexpanded/yrtuber-frontend.git
+	branch = main
 [submodule "backend"]
 	path = backend
 	url = git@github.com:headexpanded/yrtuber-backend.git
