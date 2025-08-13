@@ -71,3 +71,6 @@ coverage/
 # Temporary folders
 tmp/
 temp/
+
+# Custom files
+laravel-rule.mdc
