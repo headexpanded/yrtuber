@@ -44,7 +44,7 @@ A full-stack application built with Laravel 12 backend and Quasar 2 frontend.
 
 ### Backend (Laravel)
 - **Port**: 8000
-- **Database**: MySQL 8.0
+- **Database**: MySQL 8.4
 - **PHP Version**: 8.3
 - **Framework**: Laravel 12
 
@@ -53,6 +53,7 @@ A full-stack application built with Laravel 12 backend and Quasar 2 frontend.
 docker-compose exec backend php artisan migrate
 docker-compose exec backend php artisan db:seed
 docker-compose exec backend php artisan tinker
+docker-compose exec backend php artisan test
 ```
 
 #### Install new packages
