@@ -51,7 +51,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
-.idea
+*.iml
+.idea/
 .cursor
 
 # Logs
