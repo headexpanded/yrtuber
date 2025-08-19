@@ -52,7 +52,7 @@ Thumbs.db
 *.swo
 *~
 *.iml
-.idea/
+.idea
 .cursor
 
 # Logs
