@@ -54,6 +54,8 @@ services:
       - DB_DATABASE=${MYSQL_DATABASE:-yrtuber}
       - DB_USERNAME=${MYSQL_USER:-yrtuber}
       - DB_PASSWORD=${MYSQL_PASSWORD:-password}
+      - SESSION_LIFETIME=1440
+      - SESSION_EXPIRE_ON_CLOSE=false
     networks:
       - yrtuber-net
     restart: unless-stopped
