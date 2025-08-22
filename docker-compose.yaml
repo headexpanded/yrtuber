@@ -47,14 +47,7 @@ services:
         condition: service_healthy
     env_file:
       - ./backend/.env
-      - ./backend/.env.testing
     environment:
-#      - DB_CONNECTION=mysql
-#      - DB_HOST=db
-#      - DB_PORT=3306
-#      - DB_DATABASE=${MYSQL_DATABASE:-yrtuber}
-#      - DB_USERNAME=${MYSQL_USER:-yrtuber}
-#      - DB_PASSWORD=${MYSQL_PASSWORD:-password}
       - SESSION_LIFETIME=1440
       - SESSION_EXPIRE_ON_CLOSE=false
     networks:
@@ -66,12 +59,44 @@ services:
       timeout: 10s
       retries: 3
 
+  # Laravel Testing Service - isolated testing environment
+  testing:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html
+      - backend_storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env.testing
+    environment:
+      - APP_ENV=testing
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=yrtuber_testing
+      - DB_USERNAME=testuser
+      - DB_PASSWORD=testpassword
+      - CACHE_STORE=array
+      - SESSION_DRIVER=array
+      - QUEUE_CONNECTION=sync
+      - MAIL_MAILER=array
+    networks:
+      - yrtuber-net
+    profiles:
+      - testing
+    command: ["tail", "-f", "/dev/null"]  # Keep container running
+
   # MySQL Database
   db:
     image: mysql:8.4
     volumes:
       - db_data:/var/lib/mysql
       - ./docker/mysql/backup:/backup
+      - ./docker/mysql/init-testing-db.sql:/docker-entrypoint-initdb.d/init-testing-db.sql
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
